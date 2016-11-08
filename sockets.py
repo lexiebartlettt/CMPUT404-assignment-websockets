@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 import flask
-from flask import Flask, request
+from flask import Flask, request, redirect
 from flask_sockets import Sockets
 import gevent
 from gevent import queue
@@ -111,7 +111,7 @@ def flask_post_json():
 @app.route("/entity/<entity>", methods=['POST','PUT'])
 def update(entity):
     '''update the entities via this interface'''
-     data = json.loads(request.data)
+    data = json.loads(request.data)
     for i in data.items():
         myWorld.update(entity, i[0], i[1])
     state = json.dumps(myWorld.get(entity))
@@ -131,7 +131,7 @@ def get_entity(entity):
 @app.route("/clear", methods=['POST','GET'])
 def clear():
     '''Clear the world out!'''
-     myWorld.clear()
+    myWorld.clear()
     return json.dumps(myWorld.world())
 
 
