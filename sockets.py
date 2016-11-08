@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 import flask
-from flask import Flask, request
+from flask import Flask, request, redirect
 from flask_sockets import Sockets
 import gevent
 from gevent import queue
@@ -59,7 +59,19 @@ class World:
     def world(self):
         return self.space
 
-myWorld = World()        
+myWorld = World()
+
+class Client:
+    def __init__(self):
+        self.queue = queue.Queue()
+
+    def put(self, v):
+        self.queue.put_nowait(v)
+
+    def get(self):
+        return self.queue.get()
+
+clients = list()
 
 def set_listener( entity, data ):
     ''' do something with the update ! '''
@@ -93,10 +105,22 @@ def subscribe_socket(ws):
     '''Fufill the websocket URL of /subscribe, every update notify the
        websocket and read updates from the websocket '''
     # Used example here: https://github.com/abramhindle/WebSocketsExamples/blob/master/broadcaster.py
-    
+    client = Client()
+    clients.append(client)
+    g.prevent.spawn( read_ws, ws, client)
+    print "Subscribing"
+    try:
+        while True:
+            # block here
+            msg = client.get()
+            print "Got a message!"
+            ws.send(msg)
+    except Exception as e:# WebSocketError as e:
+        print "WS Error %s" % e
+    finally:
+        clients.remove(client)
+        gevent.kill(g)
     # XXX: TODO IMPLEMENT ME
-    return None
-
 
 def flask_post_json():
     '''Ah the joys of frameworks! They do so much work for you
@@ -111,7 +135,7 @@ def flask_post_json():
 @app.route("/entity/<entity>", methods=['POST','PUT'])
 def update(entity):
     '''update the entities via this interface'''
-     data = json.loads(request.data)
+    data = json.loads(request.data)
     for i in data.items():
         myWorld.update(entity, i[0], i[1])
     state = json.dumps(myWorld.get(entity))
@@ -131,7 +155,7 @@ def get_entity(entity):
 @app.route("/clear", methods=['POST','GET'])
 def clear():
     '''Clear the world out!'''
-     myWorld.clear()
+    myWorld.clear()
     return json.dumps(myWorld.world())
 
 
