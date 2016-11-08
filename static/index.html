@@ -266,7 +266,7 @@ function wsSetup() {
             debug("WebSocket Recv:" + msg.data);
             //XXX: TODO What are you going to do here?
             // add new entity?
-            addEntityWithoutName(JSON.parse(msg));
+            addEntityWithoutName(JSON.parse(msg.data));
         } catch (e) {
             alert("socket on message: " + e);
         }

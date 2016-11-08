@@ -88,7 +88,7 @@ def read_ws(ws,client):
     # Used example here: https://github.com/abramhindle/WebSocketsExamples/blob/master/broadcaster.py
     try:
         while True:
-            msg = ws.receiv()
+            msg = ws.receive()
             print "WS RECV: %s" % msg
             if (msg is not None):
                 packet = json.loads(msg)
@@ -107,13 +107,13 @@ def subscribe_socket(ws):
     # Used example here: https://github.com/abramhindle/WebSocketsExamples/blob/master/broadcaster.py
     client = Client()
     clients.append(client)
-    g.prevent.spawn( read_ws, ws, client)
+    g = gevent.spawn( read_ws, ws, client)
     print "Subscribing"
     try:
         while True:
             # block here
             msg = client.get()
-            print "Got a message!"
+            # print "Got a message!"
             ws.send(msg)
     except Exception as e:# WebSocketError as e:
         print "WS Error %s" % e
