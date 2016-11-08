@@ -73,6 +73,18 @@ def hello():
 
 def read_ws(ws,client):
     '''A greenlet function that reads from the websocket and updates the world'''
+    # Used example here: https://github.com/abramhindle/WebSocketsExamples/blob/master/broadcaster.py
+    try:
+        while True:
+            msg = ws.receiv()
+            print "WS RECV: %s" % msg
+            if (msg is not None):
+                packet = json.loads(msg)
+                client.put( json.dumps(packet) )
+            else:
+                break
+    except:
+        '''Done'''
     # XXX: TODO IMPLEMENT ME
     return None
 
@@ -80,6 +92,8 @@ def read_ws(ws,client):
 def subscribe_socket(ws):
     '''Fufill the websocket URL of /subscribe, every update notify the
        websocket and read updates from the websocket '''
+    # Used example here: https://github.com/abramhindle/WebSocketsExamples/blob/master/broadcaster.py
+    
     # XXX: TODO IMPLEMENT ME
     return None
 
