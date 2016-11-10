@@ -43,6 +43,15 @@ function debug(str) {
 
 world = {};
 
+function getRandomColour(){
+    var letters = '0123456789ABCDEF';
+    var colour = '#';
+    for (var i = 0; i < 6; i++){
+        colour += letters[Math.floor(Math.random() * 16)];
+    }
+    return colour;
+}
+
 //XXX: TODO Make this prettier!
 function drawCircle(context,entity) {
     with(context) {
@@ -51,8 +60,7 @@ function drawCircle(context,entity) {
         var x = entity["x"];
         var y = entity["y"];
         //moveTo(x,y);
-        fillStyle = entity["colour"];
-        strokeStyle = fillStyle;
+        strokeStyle = getRandomColour();
         moveTo(x,y);
         var xoff = x - 286;
         var yoff = y - 228;
