@@ -53,8 +53,28 @@ function drawCircle(context,entity) {
         //moveTo(x,y);
         fillStyle = entity["colour"];
         strokeStyle = fillStyle;
-        arc(x, y, (entity["radius"])?entity["radius"]:50, 0, 2.0 * Math.PI, false);  
-        stroke();                                
+        moveTo(x,y);
+        var xoff = x - 286;
+        var yoff = y - 228;
+        bezierCurveTo(273 + xoff, 228 + yoff, 275 + xoff, 220 + yoff, 283 + xoff, 220 + yoff);
+        bezierCurveTo(291 + xoff, 220 + yoff, 301 + xoff, 229 + yoff, 285 + xoff, 236 + yoff);
+        bezierCurveTo(280 + xoff, 238 + yoff, 268 + xoff, 232 + yoff, 271 + xoff, 223 + yoff);
+        bezierCurveTo(275 + xoff, 212 + yoff, 281 + xoff, 211 + yoff, 290 + xoff, 213 + yoff);
+        bezierCurveTo(300 + xoff, 215 + yoff, 303 + xoff, 223 + yoff, 301 + xoff, 229 + yoff);
+        bezierCurveTo(298 + xoff, 239 + yoff, 297 + xoff, 238 + yoff, 289 + xoff, 242 + yoff);
+        bezierCurveTo(282 + xoff, 246 + yoff, 270 + xoff, 244 + yoff, 268 + xoff, 236 + yoff);
+        bezierCurveTo(265 + xoff, 224 + yoff, 264 + xoff, 213 + yoff, 275 + xoff, 206 + yoff);
+        bezierCurveTo(283 + xoff, 201 + yoff, 298 + xoff, 204 + yoff, 307 + xoff, 216 + yoff);
+        bezierCurveTo(316 + xoff, 228 + yoff, 307 + xoff, 237 + yoff, 304 + xoff, 242 + yoff);
+        bezierCurveTo(298 + xoff, 250 + yoff, 292 + xoff, 254 + yoff, 282 + xoff, 252 + yoff);
+        bezierCurveTo(271 + xoff, 250 + yoff, 259 + xoff, 242 + yoff, 257 + xoff, 233 + yoff);
+        bezierCurveTo(255 + xoff, 222 + yoff, 259 + xoff, 206 + yoff, 266 + xoff, 201 + yoff);
+        bezierCurveTo(283 + xoff, 190 + yoff, 297 + xoff, 199 + yoff, 310 + xoff, 206 + yoff);
+        bezierCurveTo(317 + xoff, 210 + yoff, 320 + xoff, 222 + yoff, 318 + xoff, 236 + yoff);
+        bezierCurveTo(316 + xoff, 249 + yoff, 306 + xoff, 259 + yoff, 297 + xoff, 261 + yoff);
+        bezierCurveTo(286 + xoff, 263 + yoff, 275 + xoff, 263 + yoff, 266 + xoff, 256 + yoff);
+        bezierCurveTo(255 + xoff, 248 + yoff, 243 + xoff, 241 + yoff, 252 + xoff, 208 + yoff);
+        stroke();                             
     }
 }
 
