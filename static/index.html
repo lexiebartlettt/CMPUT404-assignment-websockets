@@ -36,6 +36,36 @@ var H = canvas.height = window.innerHeight-50;
 var wscounter = 0;
 var socket;
 
+//Taken from assignment 4
+function sendJSONXMLHTTPRequest(url, objects, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState==4) {
+            try {
+                if (xhr.status==200) {
+                    //XXX: parse some JSON from the request!
+                    var data = JSON.parse(xhr.responseText);
+                    //XXX: Pass the data to the callback!
+                    callback(data);
+                }
+            } 
+            catch(e) {
+                alert('Error: ' + e.name);
+            }
+        }
+    };
+
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    if(objects != null){
+        xhr.send(JSON.stringify(objects));      
+    }
+    else{
+        xhr.send();
+    }
+
+}
+
 function debug(str) {
     var debugDiv = document.getElementById('debug');
     debugDiv.innerHTML = "" + str;
@@ -152,8 +182,7 @@ function addEntity(entity, data) {
     world[entity] = data;
     drawNextFrame(); // (but should we?)
     // XXX: make this work
-    entity = '/entity/' + entity;
-    socket.send(JSON.stringify(data));
+    socket.send(JSON.stringify({entity: entity, data: data}));
 }
 var counter = 0;
 function addEntityWithoutName(data) {
@@ -284,21 +313,21 @@ function wsSetup() {
     socket.onopen = function() {
         //XXX: TODO What are you going to do here?
         // init world?
-        socket.send(JSON.stringify({"world":true}));
     };
     socket.onerror = function(msg) {
         debug("WebSocket Error:" + msg.data);
     };
     socket.onmessage = function(msg) {  
-        try {
-            debug("WebSocket Recv:" + msg.data);
-            //XXX: TODO What are you going to do here?
-            // add new entity?
-            addEntityWithoutName(JSON.parse(msg.data));
+           try {
+            var msgData = JSON.parse(msg.data);
+            var key = Object.keys(msgData)[0]
+                var data = msgData[key];
+                world[key] = data;
+                drawNextFrame();
         } catch (e) {
             alert("socket on message: " + e);
         }
-    }; 
+    };
 }
 
 wsSetup();

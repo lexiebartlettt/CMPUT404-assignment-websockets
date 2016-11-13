@@ -72,6 +72,12 @@ class Client:
         return self.queue.get()
 
 clients = list()
+def send_all(msg):
+    for client in clients:
+        client.put( msg )
+
+def send_all_json(obj):
+    send_all( json.dumps(obj) )
 
 def set_listener( entity, data ):
     ''' do something with the update ! '''
@@ -91,8 +97,9 @@ def read_ws(ws,client):
             msg = ws.receive()
             print "WS RECV: %s" % msg
             if (msg is not None):
-                packet = json.loads(msg)
-                client.put( json.dumps(packet) )
+               packet = json.loads(msg)
+               myWorld.set(packet.get("entity"), packet.get("data"))
+               send_all( json.dumps(packet) )
             else:
                 break
     except:
