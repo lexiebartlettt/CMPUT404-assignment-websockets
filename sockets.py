@@ -81,7 +81,6 @@ def send_all_json(obj):
 
 def set_listener( entity, data ):
     ''' do something with the update ! '''
-    sendall_json({ entity : data });
 
 myWorld.add_set_listener( set_listener )
         
@@ -99,15 +98,14 @@ def read_ws(ws,client):
             print "WS RECV: %s" % msg
             if (msg is not None):
                packet = json.loads(msg)
-               for x in msg: 
-                    value = msg[key]
-                    myWorld.set(x,value)
+               myWorld.set(packet.get("entity"), packet.get("data"))
+               send_all( json.dumps(packet) )
             else:
                 break
     except:
         '''Done'''
     # XXX: TODO IMPLEMENT ME
-    return json.dumps(myWorld.world())
+    return None
 
 @sockets.route('/subscribe')
 def subscribe_socket(ws):
@@ -117,6 +115,7 @@ def subscribe_socket(ws):
     client = Client()
     clients.append(client)
     g = gevent.spawn( read_ws, ws, client)
+    print "Subscribing"
     try:
         while True:
             # block here
@@ -143,16 +142,11 @@ def flask_post_json():
 @app.route("/entity/<entity>", methods=['POST','PUT'])
 def update(entity):
     '''update the entities via this interface'''
-    data =  flask_post_json()
-
-    if request.method == 'PUT':
-        myWorld.set(entity, data)
-    elif request.method == "POST":
-        for item in data.keys():
-            myWorld.update(entity,item,data[item])
-
-    res = myWorld.get(entity)
-    return json.dumps(res)
+    data = json.loads(request.data)
+    for i in data.items():
+        myWorld.update(entity, i[0], i[1])
+    state = json.dumps(myWorld.get(entity))
+    return state
 
 @app.route("/world", methods=['POST','GET'])    
 def world():
