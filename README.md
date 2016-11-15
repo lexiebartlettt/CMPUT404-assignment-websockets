@@ -57,3 +57,5 @@ Contributors
 
 * Mark Galloway
 * Abram Hindle
+* Dayna Lacoursiere
+* Lexie Bartlett
